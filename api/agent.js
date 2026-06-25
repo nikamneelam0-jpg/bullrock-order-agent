@@ -7,21 +7,40 @@ export default async function handler(req, res) {
 
   const { message, zohoToken } = req.body;
   const CLAUDE_KEY = process.env.ANTHROPIC_API_KEY;
-  if (!CLAUDE_KEY) return res.status(500).json({ error: 'ANTHROPIC_API_KEY not set in Vercel environment variables' });
+  if (!CLAUDE_KEY) return res.status(500).json({ error: 'ANTHROPIC_API_KEY not set' });
   if (!zohoToken) return res.status(400).json({ error: 'Zoho token missing' });
 
   const ORG = '60013876707';
   const today = new Date(); today.setHours(0,0,0,0);
 
-  try {
-    const zH = { 'Authorization': `Zoho-oauthtoken ${zohoToken}` };
-    const [soRes, unpRes, parRes] = await Promise.all([
-      fetch(`https://books.zoho.in/api/v3/salesorders?filter_by=Status.Open&per_page=200&organization_id=${ORG}`, { headers: zH }),
-      fetch(`https://books.zoho.in/api/v3/invoices?status=unpaid&per_page=200&sort_column=due_date&organization_id=${ORG}`, { headers: zH }),
-      fetch(`https://books.zoho.in/api/v3/invoices?status=partially_paid&per_page=200&sort_column=due_date&organization_id=${ORG}`, { headers: zH })
-    ]);
+  // Try both India and global endpoints
+  const ZOHO_BASE = 'https://www.zohoapis.in/books/v3';
+  const zH = { 'Authorization': `Zoho-oauthtoken ${zohoToken}`, 'Content-Type': 'application/json' };
 
-    if (!soRes.ok) return res.status(401).json({ error: `Zoho auth failed (${soRes.status}) — token expired. Get a new one from api-console.zoho.in → Self Client → Generate Token` });
+  try {
+    // Test connection first
+    const testRes = await fetch(`${ZOHO_BASE}/salesorders?filter_by=Status.Open&per_page=1&organization_id=${ORG}`, { headers: zH });
+    const testText = await testRes.text();
+
+    if (!testRes.ok) {
+      return res.status(401).json({
+        error: `Zoho connection failed (${testRes.status}). Response: ${testText.substring(0,200)}. Please generate a fresh token from api-console.zoho.in`
+      });
+    }
+
+    const testData = JSON.parse(testText);
+    if (testData.code && testData.code !== 0) {
+      return res.status(401).json({
+        error: `Zoho error code ${testData.code}: ${testData.message}. Please generate a fresh token.`
+      });
+    }
+
+    // Full fetch
+    const [soRes, unpRes, parRes] = await Promise.all([
+      fetch(`${ZOHO_BASE}/salesorders?filter_by=Status.Open&per_page=200&organization_id=${ORG}`, { headers: zH }),
+      fetch(`${ZOHO_BASE}/invoices?status=unpaid&per_page=200&sort_column=due_date&organization_id=${ORG}`, { headers: zH }),
+      fetch(`${ZOHO_BASE}/invoices?status=partially_paid&per_page=200&sort_column=due_date&organization_id=${ORG}`, { headers: zH })
+    ]);
 
     const [soData, unpData, parData] = await Promise.all([soRes.json(), unpRes.json(), parRes.json()]);
     const salesorders = soData.salesorders || [];
@@ -65,8 +84,8 @@ export default async function handler(req, res) {
       let verdict='fulfillable', vl='Ready to dispatch', action='Book shipping now';
       if (sub?.includes('Cancelled')) { verdict='urgent'; vl='Cancelled — review'; action='Decide: refund or dispatch'; }
       else if (d !== null && d < 0) { verdict='urgent'; vl=`${Math.abs(d)}d lapsed`; action='Contact customer immediately'; }
-      else if (effAdv < 30 && d !== null && d > 30) { verdict='fap'; vl='FAP candidate'; action='Low advance — reallocate if urgent buyer found'; }
-      else if (effAdv < 30 && age > 7 && !note) { verdict='blocked'; vl='No payment'; action='Collect advance or dissolve order'; }
+      else if (effAdv < 30 && d !== null && d > 30) { verdict='fap'; vl='FAP candidate'; action='Low advance — reallocation possible'; }
+      else if (effAdv < 30 && age > 7 && !note) { verdict='blocked'; vl='No payment'; action='Collect advance or dissolve'; }
 
       const acct = unrecorded ? `Payment ~${effAdv}% received but NOT recorded in Zoho — record now` :
         (age > 7 && effAdv < 30 && !note) ? `${age}d old, ${effAdv}% advance — collect or dissolve` : '';
@@ -83,7 +102,9 @@ export default async function handler(req, res) {
         zohoUrl: type==='so'
           ? `https://books.zoho.in/app/${ORG}#/salesorders/${id}`
           : `https://books.zoho.in/app/${ORG}#/invoices/${id}`,
-        lineItems: [{ sku:'—', name:'Click Open in Zoho for line items', qty:1, status: effAdv<30&&d!==null&&d>30?'fap':d!==null&&d<0?'blocked':'stock', statusLabel: vl, detail:'' }],
+        lineItems: [{ sku:'—', name:'Click Open in Zoho for line items', qty:1,
+          status: d!==null&&d<0?'blocked': effAdv<30&&d!==null&&d>30?'fap':'stock',
+          statusLabel: vl, detail:'' }],
         accountsAlert: acct
       };
     }
@@ -117,7 +138,7 @@ export default async function handler(req, res) {
         total: orders.length,
         fulfillable: orders.filter(o=>o.verdict==='fulfillable').length,
         fap: fapOrders.length,
-        eta: orders.filter(o=>o.verdict==='eta').length,
+        eta: 0,
         blocked: orders.filter(o=>o.verdict==='blocked').length,
         cashAtRisk: orders.filter(o=>o.effectiveAdvPct<30&&o.bookingAgeDays>7).reduce((s,o)=>s+o.balance,0),
         fapValue: fapOrders.reduce((s,o)=>s+o.balance,0)
