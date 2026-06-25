@@ -117,6 +117,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);height:
     <button class="sbtn" onclick="checkSKU()">📦 FAP for SKU</button>
     <div class="sdiv"></div>
     <div id="lastRun" style="font-size:10px;color:var(--t3)">Ready</div>
+    <div class="sdiv"></div>
+    <button class="sbtn" onclick="resetToken()" style="color:var(--amber);border-color:var(--amber)">🔑 Update Zoho Token</button>
   </div>
   <div class="content">
     <div class="out" id="out">
@@ -154,6 +156,12 @@ window.onload=()=>{
   }
 };
 
+function resetToken(){
+  localStorage.removeItem('br_ztok');
+  document.getElementById('setupBar').style.display='flex';
+  document.getElementById('zohoToken').value='';
+  document.getElementById('syncLbl').textContent='Token cleared — enter new token';
+}
 function saveToken(){
   const t=document.getElementById('zohoToken').value.trim();
   if(!t){alert('Please enter your Zoho token');return;}
