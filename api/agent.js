@@ -231,6 +231,13 @@ export default async function handler(req, res) {
       };
     }
 
+    // Route specific queries
+    const msgLower = (req.body.message || '').toLowerCase();
+    const checkMatch = msgLower.match(/check\s+(so-\d+|bfld[-\d]+|bf\d+)/i) ||
+                       (req.body.message||'').match(/check\s+(SO-\d+|BFLD[-\d]+|BF[\d-]+)/i);
+    const skuMatch = msgLower.match(/fap for sku\s+([^\s]+)/i) ||
+                     msgLower.match(/sku\s+([^\s]+)/i);
+
     const orders = [];
 
     // Fetch ALL SO details with line items
