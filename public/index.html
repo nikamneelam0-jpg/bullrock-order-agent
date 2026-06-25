@@ -220,7 +220,7 @@ function doRun(cmd){
       setBadge('accounts',D.accounts.length);
       addA(renderReport(data));
       var now=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-      document.getElementById('sync').textContent='Synced '+now;
+      document.getElementById('sync').textContent='Synced '+now+(D.stats.etaSheetLoaded?' | ETA: '+D.stats.etaSheetLoaded+' SKUs':'');
       document.getElementById('lastrun').textContent='Last: '+now;
     } else {
       addA('<div style="font-family:\'JetBrains Mono\',monospace;font-size:10px;color:var(--t2);white-space:pre-wrap;background:var(--s2);padding:10px;border-radius:6px;border:1px solid var(--b1)">'+JSON.stringify(resp,null,2).substring(0,2000)+'</div>');
@@ -284,12 +284,21 @@ function sgrid(st){
   if(!st||!st.total) return '';
   var fapL=st.fapValue?'&#8377;'+Math.round(st.fapValue/100000).toFixed(1)+'L':'&mdash;';
   var riskV=st.cashAtRisk?'&#8377;'+Math.round(st.cashAtRisk/100000).toFixed(1)+'L':'&#8377;0';
+  var etaInfo=st.etaSheetLoaded?st.etaSheetLoaded+' SKUs':'not loaded';
   return '<div class="sgrid">'+
-    sc('Total',st.total,'var(--t1)','')+
-    sc('Fulfillable',st.fulfillable,'var(--green)','ready today')+
-    sc('FAP',st.fap,'var(--blue)',fapL)+
-    sc('On ETA',st.eta,'var(--amber)','')+
-    sc('Cash risk',riskV,'var(--red2)','&lt;30% &gt;7d')+
+    scClick('Total',st.total,'var(--t1)','','orders')+
+    scClick('Fulfillable',st.fulfillable,'var(--green)','ready today','orders')+
+    scClick('FAP',st.fap,'var(--blue)',fapL,'fap')+
+    scClick('On ETA',st.eta,'var(--amber)',etaInfo,'orders')+
+    scClick('Cash risk',riskV,'var(--red2)','<30% >7d','accounts')+
+  '</div>';
+}
+
+function scClick(l,v,c,s,tab){
+  return '<div class="sc" style="cursor:pointer" onclick="showTab(''+tab+'')">'+
+    '<div class="l">'+l+'</div>'+
+    '<div class="v" style="color:'+c+'">'+v+'</div>'+
+    (s?'<div class="s">'+s+'</div>':'')+
   '</div>';
 }
 
@@ -362,7 +371,7 @@ function renderReport(data){
   if(data.orders&&data.orders.length){
     h+='<div class="slbl2">Orders &mdash; by priority</div>';
     data.orders.slice(0,6).forEach(function(o){ h+=oCard(o); });
-    if(data.orders.length>6) h+='<div style="text-align:center;font-size:11px;color:var(--t3);padding:5px">+'+(data.orders.length-6)+'more &mdash; see Orders tab</div>';
+    if(data.orders.length>6) h+='<div style="text-align:center;font-size:11px;color:var(--t3);padding:5px;cursor:pointer" onclick="showTab(\"orders\")">'+(data.orders.length-6)+' more — click Orders tab</div>';
   }
   if(data.accountsAlerts&&data.accountsAlerts.length){
     h+='<div class="slbl2">Accounts alerts</div>';
