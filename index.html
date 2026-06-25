@@ -174,10 +174,9 @@ function showTab(t) {
     document.getElementById('msgs').style.display = D.orders.length ? 'block' : 'none';
     return;
   }
-  if (t === 'orders') out.innerHTML = renderOrders();
-  if (t === 'fap') out.innerHTML = renderFAP();
-  if (t === 'accounts') out.innerHTML = renderAccounts();
-  bindCards(out);
+  if (t === 'orders') { out.innerHTML = renderOrders(); bindCards(out); }
+  if (t === 'fap') { out.innerHTML = renderFAP(); bindCards(out); }
+  if (t === 'accounts') { out.innerHTML = renderAccounts(); }
 }
 
 function doRun(cmd) {
@@ -207,7 +206,17 @@ function doRun(cmd) {
       return;
     }
     var data = resp.data;
-    if (data && data.type === 'full_report') {
+    if (data && (data.type === 'full_report' || data.type === 'single_order' || data.type === 'fap_sku')) {
+      if (data.type === 'single_order' && data.order) {
+        addA(oCard(data.order));
+        return;
+      }
+      if (data.type === 'fap_sku' && data.orders) {
+        var fh = '<div class="slbl2">FAP Queue - SKU ' + (data.sku||'') + '</div>';
+        data.orders.forEach(function(o) { fh += oCard(o); });
+        addA(fh);
+        return;
+      }
       D = { orders: data.orders || [], accounts: data.accountsAlerts || [], stats: data.stats || {} };
       setBadge('orders', D.orders.length);
       setBadge('fap', D.orders.filter(function(o) { return o.verdict === 'fap'; }).length);
