@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   const today = new Date(); today.setHours(0,0,0,0);
 
   // Try both India and global endpoints
-  const ZOHO_BASE = 'https://www.zohoapis.in/books/v3';
+  const ZOHO_BASE = 'https://books.zoho.in/api/v3';
   const zH = { 'Authorization': `Zoho-oauthtoken ${zohoToken}`, 'Content-Type': 'application/json' };
 
   try {
