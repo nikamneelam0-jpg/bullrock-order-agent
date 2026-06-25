@@ -5,52 +5,58 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { message, zohoToken } = req.body;
   const CLAUDE_KEY = process.env.ANTHROPIC_API_KEY;
-  if (!CLAUDE_KEY) return res.status(500).json({ error: 'ANTHROPIC_API_KEY not set' });
-  if (!zohoToken) return res.status(400).json({ error: 'Zoho token missing' });
-
+  const CLIENT_ID = process.env.ZOHO_CLIENT_ID;
+  const CLIENT_SECRET = process.env.ZOHO_CLIENT_SECRET;
+  const REFRESH_TOKEN = process.env.ZOHO_REFRESH_TOKEN;
   const ORG = '60013876707';
-  const today = new Date(); today.setHours(0,0,0,0);
-
-  // Try both India and global endpoints
-  const ZOHO_BASE = 'https://books.zoho.in/api/v3';
-  const zH = { 'Authorization': `Zoho-oauthtoken ${zohoToken}`, 'Content-Type': 'application/json' };
 
   try {
-    // Test connection first
-    const testRes = await fetch(`${ZOHO_BASE}/salesorders?filter_by=Status.Open&per_page=1&organization_id=${ORG}`, { headers: zH });
-    const testText = await testRes.text();
+    // Step 1: Get fresh Zoho access token using refresh token
+    const tokenRes = await fetch('https://accounts.zoho.in/oauth/v2/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        refresh_token: REFRESH_TOKEN,
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
+        grant_type: 'refresh_token'
+      })
+    });
 
-    if (!testRes.ok) {
-      return res.status(401).json({
-        error: `Zoho connection failed (${testRes.status}). Response: ${testText.substring(0,200)}. Please generate a fresh token from api-console.zoho.in`
-      });
+    const tokenData = await tokenRes.json();
+    if (!tokenData.access_token) {
+      return res.status(401).json({ error: `Zoho token refresh failed: ${JSON.stringify(tokenData)}` });
     }
 
-    const testData = JSON.parse(testText);
-    if (testData.code && testData.code !== 0) {
-      return res.status(401).json({
-        error: `Zoho error code ${testData.code}: ${testData.message}. Please generate a fresh token.`
-      });
-    }
+    const accessToken = tokenData.access_token;
+    const zH = { 'Authorization': `Zoho-oauthtoken ${accessToken}` };
+    const BASE = 'https://books.zoho.in/api/v3';
 
-    // Full fetch
+    // Step 2: Fetch all data
     const [soRes, unpRes, parRes] = await Promise.all([
-      fetch(`${ZOHO_BASE}/salesorders?filter_by=Status.Open&per_page=200&organization_id=${ORG}`, { headers: zH }),
-      fetch(`${ZOHO_BASE}/invoices?status=unpaid&per_page=200&sort_column=due_date&organization_id=${ORG}`, { headers: zH }),
-      fetch(`${ZOHO_BASE}/invoices?status=partially_paid&per_page=200&sort_column=due_date&organization_id=${ORG}`, { headers: zH })
+      fetch(`${BASE}/salesorders?filter_by=Status.Open&per_page=200&organization_id=${ORG}`, { headers: zH }),
+      fetch(`${BASE}/invoices?status=unpaid&per_page=200&sort_column=due_date&organization_id=${ORG}`, { headers: zH }),
+      fetch(`${BASE}/invoices?status=partially_paid&per_page=200&sort_column=due_date&organization_id=${ORG}`, { headers: zH })
     ]);
 
     const [soData, unpData, parData] = await Promise.all([soRes.json(), unpRes.json(), parRes.json()]);
+
+    if (soData.code && soData.code !== 0) {
+      return res.status(400).json({ error: `Zoho Books error: ${soData.message}` });
+    }
+
     const salesorders = soData.salesorders || [];
     const unpaid = unpData.invoices || [];
     const partial = parData.invoices || [];
+    const today = new Date(); today.setHours(0,0,0,0);
 
+    // Step 3: Filter confirmed SOs
     const confirmedSOs = salesorders.filter(so =>
       ['cs_preorde','cs_website','cs_verifie','open'].includes(so.current_sub_status)
     );
 
+    // Step 4: Filter BFLD invoices not shipped
     const invMap = {};
     [...unpaid, ...partial].forEach(inv => {
       const num = inv.invoice_number || '';
