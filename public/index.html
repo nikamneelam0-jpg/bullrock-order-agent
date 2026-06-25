@@ -3,29 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BullrocK Order Intelligence</title><!-- v132502 -->
+<title>BullrocK Order Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0c0c0e;--s1:#141416;--s2:#1c1c20;--s3:#242428;--b1:#2a2a32;--b2:#36363f;--t1:#f2f2f2;--t2:#9898a8;--t3:#606070;--red:#BF1E09;--red2:#e02010;--green:#10b981;--amber:#f59e0b;--blue:#3b82f6;--purple:#8b5cf6}
+:root{--bg:#0c0c0e;--s1:#141416;--s2:#1c1c20;--s3:#242428;--b1:#2a2a32;--b2:#36363f;--t1:#f2f2f2;--t2:#9898a8;--t3:#606070;--red:#BF1E09;--green:#10b981;--amber:#f59e0b;--blue:#3b82f6;--purple:#8b5cf6}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);height:100vh;display:flex;flex-direction:column;overflow:hidden;font-size:13px}
 .hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--b1);background:var(--s1);flex-shrink:0}
-.logo{width:28px;height:28px;background:var(--red);border-radius:5px;display:grid;place-items:center;font-size:11px;font-weight:600;color:#fff;flex-shrink:0}
+.logo{width:28px;height:28px;background:var(--red);border-radius:5px;display:grid;place-items:center;font-size:11px;font-weight:600;color:#fff}
 .tabs{display:flex;gap:1px;padding:6px 16px 0;background:var(--s1);border-bottom:1px solid var(--b1);flex-shrink:0}
-.tab{padding:5px 12px;font-size:11px;font-weight:500;cursor:pointer;border-radius:5px 5px 0 0;color:var(--t3);border:1px solid transparent;border-bottom:none;transition:color 0.1s}
-.tab:hover{color:var(--t2)}
+.tab{padding:5px 12px;font-size:11px;font-weight:500;cursor:pointer;border-radius:5px 5px 0 0;color:var(--t3);border:1px solid transparent;border-bottom:none}
 .tab.on{color:var(--t1);background:var(--bg);border-color:var(--b1);margin-bottom:-1px}
 .badge{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;background:var(--red);color:#fff;border-radius:50%;font-size:8px;font-weight:600;margin-left:3px}
 .main{display:flex;flex:1;overflow:hidden}
 .side{width:195px;border-right:1px solid var(--b1);background:var(--s1);flex-shrink:0;overflow-y:auto;padding:9px}
 .slbl{font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:0.08em;margin:6px 0 4px}
 .sbtn{width:100%;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:5px;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;background:transparent;color:var(--t2);border:1px solid var(--b1);margin-bottom:3px;text-align:left}
-.sbtn:hover{background:var(--s2);color:var(--t1);border-color:var(--b2)}
+.sbtn:hover{background:var(--s2);color:var(--t1)}
 .sbtn.p{background:var(--red);border-color:var(--red);color:#fff;font-weight:500}
-.sbtn.p:hover{background:var(--red2)}
 .sdiv{height:1px;background:var(--b1);margin:7px 0}
 .si{width:100%;padding:5px 8px;background:var(--s2);border:1px solid var(--b1);border-radius:5px;color:var(--t1);font-size:10px;font-family:'JetBrains Mono',monospace;outline:none;margin-bottom:3px}
-.si:focus{border-color:var(--red)}
 .si::placeholder{color:var(--t3)}
 .content{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .out{flex:1;overflow-y:auto;padding:12px 16px}
@@ -33,19 +30,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);height:
 .out::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
 .welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:9px;text-align:center}
 .chips{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:5px}
-.chip{padding:4px 10px;background:var(--s2);border:1px solid var(--b1);border-radius:16px;font-size:10px;color:var(--t2);font-family:'JetBrains Mono',monospace;cursor:pointer}
+.chip{padding:4px 10px;background:var(--s2);border:1px solid var(--b1);border-radius:16px;font-size:10px;color:var(--t2);cursor:pointer}
 .chip:hover{border-color:var(--red);color:var(--t1)}
 .umsg{display:flex;justify-content:flex-end;margin-bottom:7px}
 .ubbl{background:var(--red);color:#fff;padding:6px 11px;border-radius:12px 12px 3px 12px;font-size:12px;max-width:65%}
 .amsg{display:flex;gap:7px;align-items:flex-start;margin-bottom:10px}
 .ava{width:22px;height:22px;background:var(--s3);border:1px solid var(--b2);border-radius:4px;display:grid;place-items:center;font-size:10px;flex-shrink:0}
 .sgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px}
-.sc{background:var(--s2);border:1px solid var(--b1);border-radius:6px;padding:8px 9px}
+.sc{background:var(--s2);border:1px solid var(--b1);border-radius:6px;padding:8px 9px;cursor:pointer}
+.sc:hover{border-color:var(--b2)}
 .sc .l{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px}
 .sc .v{font-size:18px;font-weight:600;font-family:'JetBrains Mono',monospace}
 .sc .s{font-size:9px;color:var(--t3);margin-top:1px}
 .ocard{background:var(--s2);border:1px solid var(--b1);border-radius:6px;margin-bottom:6px;overflow:hidden}
-.ocard.rl{border-left:3px solid var(--red2)}
+.ocard.rl{border-left:3px solid #e02010}
 .ocard.al{border-left:3px solid var(--amber)}
 .ocard.gl{border-left:3px solid var(--green)}
 .ocard.bl{border-left:3px solid var(--blue)}
@@ -59,13 +57,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);height:
 .li:last-child{border-bottom:none}
 .lisku{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);width:50px;flex-shrink:0;padding-top:1px}
 .liname{flex:1;color:var(--t2);line-height:1.4}
-.liqty{color:var(--t3);font-size:10px;margin-right:3px;flex-shrink:0;padding-top:1px}
+.liqty{color:var(--t3);font-size:10px;margin-right:3px;flex-shrink:0}
 .listatus{font-size:9px;padding:2px 6px;border-radius:8px;white-space:nowrap;flex-shrink:0}
-.lidetail{font-size:10px;color:var(--t2);line-height:1.5;margin:3px 0 3px 56px;padding:4px 7px;border-radius:4px}
-.fapbox{background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.2)}
-.etabox{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2)}
-.blockbox{background:rgba(96,96,112,0.07);border:1px solid rgba(96,96,112,0.2)}
-.pmtbox{margin-top:5px;padding:5px 7px;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:4px;font-size:10px;color:var(--amber)}
+.lidetail{font-size:10px;color:var(--t2);line-height:1.5;margin:3px 0 3px 56px;padding:4px 7px;border-radius:4px;border:1px solid}
+.lidetail.fap{background:rgba(59,130,246,0.07);border-color:rgba(59,130,246,0.25)}
+.lidetail.eta{background:rgba(245,158,11,0.07);border-color:rgba(245,158,11,0.25)}
+.lidetail.blocked{background:rgba(96,96,112,0.07);border-color:rgba(96,96,112,0.25)}
+.pmtbox{margin-top:5px;padding:5px 7px;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.25);border-radius:4px;font-size:10px;color:var(--amber)}
+.actbox{margin-top:6px;font-size:11px;color:var(--t2)}
 .arow{display:flex;gap:4px;margin-top:7px}
 .abtn{padding:4px 8px;border-radius:4px;font-size:10px;cursor:pointer;border:1px solid var(--b2);background:var(--s3);color:var(--t2);font-family:'Inter',sans-serif;text-decoration:none;display:inline-block}
 .abtn:hover{border-color:var(--red);color:var(--t1)}
@@ -76,16 +75,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);height:
 .iinput:focus{border-color:var(--red)}
 .iinput::placeholder{color:var(--t3)}
 .ibtn{padding:7px 14px;background:var(--red);border:none;border-radius:6px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
-.ibtn:hover{background:var(--red2)}
 .ibtn:disabled{background:var(--s3);color:var(--t3);cursor:not-allowed}
 .loading{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t3);padding:6px 0}
-.spin{width:13px;height:13px;border:1.5px solid var(--b2);border-top-color:var(--red);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
+.spin{width:13px;height:13px;border:1.5px solid var(--b2);border-top-color:var(--red);border-radius:50%;animation:spin 0.7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .at{width:100%;border-collapse:collapse;font-size:11px}
-.at th{text-align:left;padding:5px 8px;font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:0.05em;border-bottom:1px solid var(--b1)}
+.at th{text-align:left;padding:5px 8px;font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;border-bottom:1px solid var(--b1)}
 .at td{padding:6px 8px;border-bottom:1px solid var(--b1);vertical-align:top}
 .atag{padding:2px 6px;border-radius:3px;font-size:9px;font-weight:600}
-.err{background:rgba(224,32,16,0.08);border:1px solid rgba(224,32,16,0.25);border-radius:6px;padding:10px 12px;font-size:12px;color:var(--red2);margin-bottom:8px}
+.err{background:rgba(224,32,16,0.08);border:1px solid rgba(224,32,16,0.25);border-radius:6px;padding:10px 12px;font-size:12px;color:#e02010}
 </style>
 </head>
 <body>
@@ -99,330 +97,322 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);height:
   </div>
   <div id="sync" style="font-size:10px;color:var(--t3);font-family:'JetBrains Mono',monospace"></div>
 </div>
-
 <div class="tabs">
   <div class="tab on" id="t-agent" onclick="showTab('agent')">Agent</div>
   <div class="tab" id="t-orders" onclick="showTab('orders')">Orders<span class="badge" id="b-orders" style="display:none">0</span></div>
   <div class="tab" id="t-fap" onclick="showTab('fap')">FAP Pool<span class="badge" id="b-fap" style="display:none">0</span></div>
   <div class="tab" id="t-accounts" onclick="showTab('accounts')">Accounts<span class="badge" id="b-accounts" style="display:none">0</span></div>
 </div>
-
 <div class="main">
   <div class="side">
     <div class="slbl">Quick run</div>
-    <button class="sbtn p" id="btn-oi">⚡ Order Intelligence</button>
-    <button class="sbtn" id="btn-bfld">📋 BFLD Analysis</button>
-    <button class="sbtn" id="btn-acct">💳 Accounts Watch</button>
+    <button class="sbtn p" id="b-oi">⚡ Order Intelligence</button>
+    <button class="sbtn" id="b-bfld">📋 BFLD Analysis</button>
+    <button class="sbtn" id="b-acct">💳 Accounts Watch</button>
     <div class="sdiv"></div>
     <div class="slbl">Check specific</div>
     <input class="si" id="oref" placeholder="SO-19441 or BFLD-0092">
-    <button class="sbtn" id="btn-co">🔍 Check order</button>
+    <button class="sbtn" id="b-co">🔍 Check order</button>
     <input class="si" id="skuref" placeholder="SKU e.g. 3144" style="margin-top:5px">
-    <button class="sbtn" id="btn-sku">📦 FAP for SKU</button>
+    <button class="sbtn" id="b-sku">📦 FAP for SKU</button>
     <div class="sdiv"></div>
     <div id="lastrun" style="font-size:10px;color:var(--t3)">Ready</div>
   </div>
-
   <div class="content">
     <div class="out" id="out">
       <div id="wlc" class="welcome">
         <div style="font-size:32px">🤖</div>
         <div style="font-size:14px;font-weight:600">BullrocK Order Intelligence</div>
-        <div style="font-size:12px;color:var(--t3);line-height:1.6;max-width:320px">Per-item fulfillment. SOH → ETA → FAP reallocation for every confirmed order.</div>
-        <div class="chips" id="wlc-chips">
-          <div class="chip" id="chip-oi">Run order intelligence</div>
-          <div class="chip" id="chip-bfld">Run BFLD analysis</div>
-          <div class="chip" id="chip-acct">Accounts watch</div>
+        <div style="font-size:12px;color:var(--t3);line-height:1.6;max-width:320px">Per-item fulfillment. SOH to ETA to FAP reallocation for every confirmed order.</div>
+        <div class="chips">
+          <div class="chip" id="c-oi">Run order intelligence</div>
+          <div class="chip" id="c-bfld">Run BFLD analysis</div>
+          <div class="chip" id="c-acct">Accounts watch</div>
         </div>
       </div>
       <div id="msgs" style="display:none"></div>
     </div>
     <div class="ibar">
       <input class="iinput" id="inp" placeholder="Run order intelligence · Check BFLD-0092 · FAP for SKU 3144...">
-      <button class="ibtn" id="runbtn">Run →</button>
+      <button class="ibtn" id="runbtn">Run</button>
     </div>
   </div>
 </div>
-
 <script>
-var D={orders:[],accounts:[],stats:{}};
-var busy=false;
-var curTab='agent';
+var D = { orders: [], accounts: [], stats: {} };
+var busy = false;
+var curTab = 'agent';
+var lc = 0;
 
-// Wire up all buttons after DOM ready
-window.addEventListener('load',function(){
-  document.getElementById('btn-oi').addEventListener('click',function(){ doRun('Run order intelligence'); });
-  document.getElementById('btn-bfld').addEventListener('click',function(){ doRun('Run BFLD analysis'); });
-  document.getElementById('btn-acct').addEventListener('click',function(){ doRun('Accounts watch'); });
-  document.getElementById('btn-co').addEventListener('click',function(){
-    var v=document.getElementById('oref').value.trim();
-    if(v) doRun('Check '+v);
-  });
-  document.getElementById('btn-sku').addEventListener('click',function(){
-    var v=document.getElementById('skuref').value.trim();
-    if(v) doRun('FAP for SKU '+v);
-  });
-  document.getElementById('runbtn').addEventListener('click',function(){ doRun(); });
-  document.getElementById('inp').addEventListener('keydown',function(e){ if(e.key==='Enter') doRun(); });
-  document.getElementById('chip-oi').addEventListener('click',function(){ doRun('Run order intelligence'); });
-  document.getElementById('chip-bfld').addEventListener('click',function(){ doRun('Run BFLD analysis'); });
-  document.getElementById('chip-acct').addEventListener('click',function(){ doRun('Accounts watch'); });
+window.addEventListener('load', function() {
+  document.getElementById('b-oi').onclick = function() { doRun('Run order intelligence'); };
+  document.getElementById('b-bfld').onclick = function() { doRun('Run BFLD analysis'); };
+  document.getElementById('b-acct').onclick = function() { doRun('Accounts watch'); };
+  document.getElementById('b-co').onclick = function() {
+    var v = document.getElementById('oref').value.trim();
+    if (v) doRun('Check ' + v);
+  };
+  document.getElementById('b-sku').onclick = function() {
+    var v = document.getElementById('skuref').value.trim();
+    if (v) doRun('FAP for SKU ' + v);
+  };
+  document.getElementById('runbtn').onclick = function() { doRun(); };
+  document.getElementById('inp').onkeydown = function(e) { if (e.key === 'Enter') doRun(); };
+  document.getElementById('c-oi').onclick = function() { doRun('Run order intelligence'); };
+  document.getElementById('c-bfld').onclick = function() { doRun('Run BFLD analysis'); };
+  document.getElementById('c-acct').onclick = function() { doRun('Accounts watch'); };
 });
 
-function showTab(t){
-  curTab=t;
-  ['agent','orders','fap','accounts'].forEach(function(x){
-    document.getElementById('t-'+x).classList.toggle('on',x===t);
+function showTab(t) {
+  curTab = t;
+  ['agent','orders','fap','accounts'].forEach(function(x) {
+    document.getElementById('t-' + x).classList.toggle('on', x === t);
   });
-  var out=document.getElementById('out');
-  if(t==='agent'){
-    document.getElementById('wlc').style.display=D.orders.length?'none':'flex';
-    document.getElementById('msgs').style.display=D.orders.length?'block':'none';
+  var out = document.getElementById('out');
+  if (t === 'agent') {
+    document.getElementById('wlc').style.display = D.orders.length ? 'none' : 'flex';
+    document.getElementById('msgs').style.display = D.orders.length ? 'block' : 'none';
     return;
   }
-  if(t==='orders') out.innerHTML=renderOrders();
-  if(t==='fap') out.innerHTML=renderFAP();
-  if(t==='accounts') out.innerHTML=renderAccounts();
+  if (t === 'orders') out.innerHTML = renderOrders();
+  if (t === 'fap') out.innerHTML = renderFAP();
+  if (t === 'accounts') out.innerHTML = renderAccounts();
   bindCards(out);
 }
 
-function doRun(cmd){
-  var inp=document.getElementById('inp');
-  var msg=cmd||inp.value.trim();
-  if(!msg||busy) return;
-  inp.value='';
+function doRun(cmd) {
+  var inp = document.getElementById('inp');
+  var msg = cmd || inp.value.trim();
+  if (!msg || busy) return;
+  inp.value = '';
   showTab('agent');
-  document.getElementById('wlc').style.display='none';
-  document.getElementById('msgs').style.display='block';
+  document.getElementById('wlc').style.display = 'none';
+  document.getElementById('msgs').style.display = 'block';
   addU(msg);
-  document.getElementById('lastrun').textContent='Running...';
-  busy=true;
-  document.getElementById('runbtn').disabled=true;
-  var lid=addLoading();
+  document.getElementById('lastrun').textContent = 'Running...';
+  busy = true;
+  document.getElementById('runbtn').disabled = true;
+  var lid = addLoading();
 
-  fetch('/api/agent',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({message:msg})
+  fetch('/api/agent', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: msg })
   })
-  .then(function(r){ return r.json(); })
-  .then(function(resp){
+  .then(function(r) { return r.json(); })
+  .then(function(resp) {
     rmLoading(lid);
-    if(resp.error){
-      addA('<div class="err">'+resp.error+'</div>');
+    if (resp.error) {
+      addA('<div class="err">' + resp.error + '</div>');
       return;
     }
-    var data=resp.data;
-    if(data && data.type==='full_report'){
-      D={orders:data.orders||[],accounts:data.accountsAlerts||[],stats:data.stats||{}};
-      setBadge('orders',D.orders.length);
-      setBadge('fap',D.orders.filter(function(o){ return o.verdict==='fap'; }).length);
-      setBadge('accounts',D.accounts.length);
+    var data = resp.data;
+    if (data && data.type === 'full_report') {
+      D = { orders: data.orders || [], accounts: data.accountsAlerts || [], stats: data.stats || {} };
+      setBadge('orders', D.orders.length);
+      setBadge('fap', D.orders.filter(function(o) { return o.verdict === 'fap'; }).length);
+      setBadge('accounts', D.accounts.length);
       addA(renderReport(data));
-      var now=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-      document.getElementById('sync').textContent='Synced '+now+(D.stats.etaSheetLoaded?' | ETA: '+D.stats.etaSheetLoaded+' SKUs':'');
-      document.getElementById('lastrun').textContent='Last: '+now;
+      var now = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+      var etaInfo = data.stats && data.stats.etaSheetLoaded ? ' | ETA: ' + data.stats.etaSheetLoaded + ' SKUs' : '';
+      document.getElementById('sync').textContent = 'Synced ' + now + etaInfo;
+      document.getElementById('lastrun').textContent = 'Last: ' + now;
     } else {
-      addA('<div style="font-family:\'JetBrains Mono\',monospace;font-size:10px;color:var(--t2);white-space:pre-wrap;background:var(--s2);padding:10px;border-radius:6px;border:1px solid var(--b1)">'+JSON.stringify(resp,null,2).substring(0,2000)+'</div>');
+      addA('<pre style="font-size:10px;color:var(--t2);white-space:pre-wrap">' + JSON.stringify(resp, null, 2).substring(0, 1000) + '</pre>');
     }
   })
-  .catch(function(e){
+  .catch(function(e) {
     rmLoading(lid);
-    addA('<div class="err">Network error: '+e.message+'</div>');
+    addA('<div class="err">Error: ' + e.message + '</div>');
   })
-  .finally(function(){
-    busy=false;
-    document.getElementById('runbtn').disabled=false;
+  .finally(function() {
+    busy = false;
+    document.getElementById('runbtn').disabled = false;
   });
 }
 
-function addU(t){
-  var m=document.getElementById('msgs');
-  var d=document.createElement('div');
-  d.className='umsg';
-  d.innerHTML='<div class="ubbl">'+t+'</div>';
+function addU(t) {
+  var m = document.getElementById('msgs');
+  var d = document.createElement('div');
+  d.className = 'umsg';
+  d.innerHTML = '<div class="ubbl">' + t + '</div>';
   m.appendChild(d);
   scroll();
 }
 
-function addA(h){
-  var m=document.getElementById('msgs');
-  var d=document.createElement('div');
-  d.className='amsg';
-  d.innerHTML='<div class="ava">🤖</div><div style="flex:1">'+h+'</div>';
+function addA(h) {
+  var m = document.getElementById('msgs');
+  var d = document.createElement('div');
+  d.className = 'amsg';
+  d.innerHTML = '<div class="ava">🤖</div><div style="flex:1">' + h + '</div>';
   m.appendChild(d);
   bindCards(d);
   scroll();
 }
 
-var lc=0;
-function addLoading(){
-  var id='l'+(++lc);
-  var m=document.getElementById('msgs');
-  var d=document.createElement('div');
-  d.id=id;d.className='amsg';
-  d.innerHTML='<div class="ava">🤖</div><div class="loading"><div class="spin"></div>Fetching Zoho data and running analysis...</div>';
-  m.appendChild(d);scroll();return id;
+function addLoading() {
+  var id = 'l' + (++lc);
+  var m = document.getElementById('msgs');
+  var d = document.createElement('div');
+  d.id = id; d.className = 'amsg';
+  d.innerHTML = '<div class="ava">🤖</div><div class="loading"><div class="spin"></div>Fetching Zoho data...</div>';
+  m.appendChild(d); scroll(); return id;
 }
-function rmLoading(id){ var e=document.getElementById(id);if(e)e.remove(); }
-function scroll(){ var o=document.getElementById('out');o.scrollTop=o.scrollHeight; }
-function setBadge(id,n){ var b=document.getElementById('b-'+id);b.textContent=n;b.style.display=n>0?'inline-flex':'none'; }
 
-function bindCards(el){
-  el.querySelectorAll('.ohdr').forEach(function(h){
-    h.addEventListener('click',function(){
+function rmLoading(id) { var e = document.getElementById(id); if (e) e.remove(); }
+function scroll() { var o = document.getElementById('out'); o.scrollTop = o.scrollHeight; }
+function setBadge(id, n) { var b = document.getElementById('b-' + id); b.textContent = n; b.style.display = n > 0 ? 'inline-flex' : 'none'; }
+
+function bindCards(el) {
+  el.querySelectorAll('.ohdr').forEach(function(h) {
+    h.onclick = function() {
       h.closest('.ocard').querySelector('.obody').classList.toggle('open');
-    });
+    };
   });
 }
 
-function sc(l,v,c,s){
-  return '<div class="sc"><div class="l">'+l+'</div><div class="v" style="color:'+c+'">'+v+'</div>'+(s?'<div class="s">'+s+'</div>':'')+'</div>';
-}
+var VC = { fulfillable: '#10b981', fap: '#3b82f6', eta: '#f59e0b', blocked: '#606070', urgent: '#e02010' };
+var BC = { fulfillable: 'gl', fap: 'bl', eta: 'al', blocked: '', urgent: 'rl' };
 
-function sgrid(st){
-  if(!st||!st.total) return '';
-  var fapL=st.fapValue?'&#8377;'+Math.round(st.fapValue/100000).toFixed(1)+'L':'&mdash;';
-  var riskV=st.cashAtRisk?'&#8377;'+Math.round(st.cashAtRisk/100000).toFixed(1)+'L':'&#8377;0';
-  var etaInfo=st.etaSheetLoaded?st.etaSheetLoaded+' SKUs':'not loaded';
-  return '<div class="sgrid">'+
-    scClick('Total',st.total,'var(--t1)','','orders')+
-    scClick('Fulfillable',st.fulfillable,'var(--green)','ready today','orders')+
-    scClick('FAP',st.fap,'var(--blue)',fapL,'fap')+
-    scClick('On ETA',st.eta,'var(--amber)',etaInfo,'orders')+
-    scClick('Cash risk',riskV,'var(--red2)','<30% >7d','accounts')+
-  '</div>';
-}
+function oCard(o) {
+  var vc = VC[o.verdict] || '#606070';
+  var bc = BC[o.verdict] || '';
+  var dText = o.daysToEsd === null ? 'No ESD' :
+              o.daysToEsd < 0 ? Math.abs(o.daysToEsd) + 'd lapsed' :
+              o.daysToEsd === 0 ? 'Today' :
+              o.daysToEsd === 1 ? 'Tomorrow' : o.daysToEsd + 'd';
+  var advText = o.paymentUnrecorded ? '~' + o.effectiveAdvPct + '% (unrecorded)' : o.advancePct + '%';
 
-function scClick(l,v,c,s,tab){
-  return '<div class="sc" style="cursor:pointer" onclick="showTab(''+tab+'')">'+
-    '<div class="l">'+l+'</div>'+
-    '<div class="v" style="color:'+c+'">'+v+'</div>'+
-    (s?'<div class="s">'+s+'</div>':'')+
-  '</div>';
-}
-
-var VC={fulfillable:'var(--green)',fap:'var(--blue)',eta:'var(--amber)',blocked:'var(--t3)',urgent:'var(--red2)'};
-var BC={fulfillable:'gl',fap:'bl',eta:'al',blocked:'',urgent:'rl'};
-
-function oCard(o){
-  var vc=VC[o.verdict]||'var(--t3)';
-  var bc=BC[o.verdict]||'';
-  var el=o.daysToEsd===null?'No ESD':o.daysToEsd<0?Math.abs(o.daysToEsd)+'d lapsed':o.daysToEsd===0?'Today':o.daysToEsd===1?'Tomorrow':o.daysToEsd+'d';
-  var adv=o.paymentUnrecorded?'~'+o.effectiveAdvPct+'% (unrecorded)':o.advancePct+'%';
-
-  var liHtml='';
-  if(o.lineItems&&o.lineItems.length){
-    liHtml=o.lineItems.map(function(li){
-      var lc={stock:'var(--green)',fap:'var(--blue)',eta:'var(--amber)',blocked:'var(--t3)',service:'var(--purple)'}[li.status]||'var(--t3)';
-      var detailBox='';
-      if(li.detail){
-        var boxCls=li.status==='fap'?'fapbox':li.status==='eta'?'etabox':'blockbox';
-        detailBox='<div class="lidetail '+boxCls+'">'+li.detail+'</div>';
+  var liHtml = '';
+  if (o.lineItems && o.lineItems.length) {
+    o.lineItems.forEach(function(li) {
+      var lc = { stock: '#10b981', fap: '#3b82f6', eta: '#f59e0b', blocked: '#606070', service: '#8b5cf6' }[li.status] || '#606070';
+      liHtml += '<div class="li">';
+      liHtml += '<span class="lisku">' + li.sku + '</span>';
+      liHtml += '<span class="liname">' + li.name + '</span>';
+      liHtml += '<span class="liqty">x' + li.qty + '</span>';
+      liHtml += '<span class="listatus" style="background:' + lc + '22;color:' + lc + '">' + li.statusLabel + '</span>';
+      liHtml += '</div>';
+      if (li.detail) {
+        liHtml += '<div class="lidetail ' + li.status + '">' + li.detail + '</div>';
       }
-      return '<div class="li">'+
-        '<span class="lisku">'+li.sku+'</span>'+
-        '<span class="liname">'+li.name+'</span>'+
-        '<span class="liqty">x'+li.qty+'</span>'+
-        '<span class="listatus" style="background:'+lc+'22;color:'+lc+'">'+li.statusLabel+'</span>'+
-        '</div>'+detailBox;
-    }).join('');
+    });
   }
 
-  var pmtHtml=o.accountsAlert?'<div class="pmtbox">&#9888; '+o.accountsAlert+'</div>':'';
-
-  return '<div class="ocard '+bc+'">'+
-    '<div class="ohdr">'+
-      '<div>'+
-        '<div style="display:flex;align-items:center;gap:6px">'+
-          '<span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;font-weight:600">'+o.ref+'</span>'+
-          '<span style="font-size:12px;color:var(--t2)">'+o.customer+'</span>'+
-        '</div>'+
-        '<div style="display:flex;gap:9px;margin-top:2px">'+
-          '<span style="font-size:10px;color:var(--t3)">'+o.salesperson+'</span>'+
-          '<span style="font-size:10px;color:var(--t3)">ESD: '+o.esd+' ('+el+')</span>'+
-          '<span style="font-size:10px;color:var(--t3)">Booked: '+o.confirmedDate+' ('+o.bookingAgeDays+'d)</span>'+
-        '</div>'+
-      '</div>'+
-      '<div style="display:flex;align-items:center;gap:6px">'+
-        '<span style="font-size:10px;color:var(--t3)">Adv: '+adv+'</span>'+
-        '<span class="vb" style="background:'+vc+'22;color:'+vc+'">'+o.verdictLabel+'</span>'+
-        '<span style="color:var(--t3);font-size:10px">&#9660;</span>'+
-      '</div>'+
-    '</div>'+
-    '<div class="ometa">'+
-      '<span>Value: <b style="font-weight:500;color:var(--t2)">&#8377;'+Math.round(o.total||0).toLocaleString('en-IN')+'</b></span>'+
-      '<span>Balance: <b style="font-weight:500;color:var(--t2)">&#8377;'+Math.round(o.balance||0).toLocaleString('en-IN')+'</b></span>'+
-      '<span>'+o.subStatus+'</span>'+
-    '</div>'+
-    '<div class="obody">'+
-      liHtml+
-      pmtHtml+
-      '<div style="margin-top:6px;font-size:11px;color:var(--t2)"><b style="font-weight:600">Action:</b> '+o.action+'</div>'+
-      '<div class="arow">'+
-        '<a href="'+o.zohoUrl+'" target="_blank" class="abtn">Open in Zoho &#8599;</a>'+
-      '</div>'+
-    '</div>'+
-  '</div>';
+  var html = '<div class="ocard ' + bc + '">';
+  html += '<div class="ohdr">';
+  html += '<div>';
+  html += '<div style="display:flex;align-items:center;gap:6px">';
+  html += '<span style="font-family:JetBrains Mono,monospace;font-size:11px;font-weight:600">' + o.ref + '</span>';
+  html += '<span style="font-size:12px;color:var(--t2)">' + o.customer + '</span>';
+  html += '</div>';
+  html += '<div style="display:flex;gap:9px;margin-top:2px">';
+  html += '<span style="font-size:10px;color:var(--t3)">' + o.salesperson + '</span>';
+  html += '<span style="font-size:10px;color:var(--t3)">ESD: ' + o.esd + ' (' + dText + ')</span>';
+  html += '<span style="font-size:10px;color:var(--t3)">Booked: ' + o.confirmedDate + ' (' + o.bookingAgeDays + 'd ago)</span>';
+  html += '</div></div>';
+  html += '<div style="display:flex;align-items:center;gap:6px">';
+  html += '<span style="font-size:10px;color:var(--t3)">Adv: ' + advText + '</span>';
+  html += '<span class="vb" style="background:' + vc + '22;color:' + vc + '">' + o.verdictLabel + '</span>';
+  html += '<span style="color:var(--t3)">&#9660;</span>';
+  html += '</div></div>';
+  html += '<div class="ometa">';
+  html += '<span>Value: <b style="font-weight:500;color:var(--t2)">&#8377;' + Math.round(o.total || 0).toLocaleString('en-IN') + '</b></span>';
+  html += '<span>Balance: <b style="font-weight:500;color:var(--t2)">&#8377;' + Math.round(o.balance || 0).toLocaleString('en-IN') + '</b></span>';
+  html += '<span>' + o.subStatus + '</span>';
+  html += '</div>';
+  html += '<div class="obody">';
+  html += liHtml;
+  if (o.accountsAlert) html += '<div class="pmtbox">&#9888; ' + o.accountsAlert + '</div>';
+  html += '<div class="actbox"><b>Action:</b> ' + o.action + '</div>';
+  html += '<div class="arow"><a href="' + o.zohoUrl + '" target="_blank" class="abtn">Open in Zoho &#8599;</a></div>';
+  html += '</div></div>';
+  return html;
 }
 
-function renderReport(data){
-  var h=sgrid(data.stats);
-  if(data.orders&&data.orders.length){
-    h+='<div class="slbl2">Orders &mdash; by priority</div>';
-    data.orders.slice(0,6).forEach(function(o){ h+=oCard(o); });
-    if(data.orders.length>6) h+='<div style="text-align:center;font-size:11px;color:var(--t3);padding:5px">'+(data.orders.length-6)+' more in Orders tab</div>';
-  }
-  if(data.accountsAlerts&&data.accountsAlerts.length){
-    h+='<div class="slbl2">Accounts alerts</div>';
-    data.accountsAlerts.slice(0,4).forEach(function(a){
-      h+='<div style="padding:5px 9px;background:var(--s2);border:1px solid var(--b1);border-radius:5px;margin-bottom:4px;font-size:11px;display:flex;gap:7px;align-items:center">'+
-        '<span style="font-family:\'JetBrains Mono\',monospace;font-weight:600">'+a.ref+'</span>'+
-        '<span style="color:var(--t2)">'+a.customer+'</span>'+
-        '<span style="color:var(--amber);margin-left:auto">'+a.issue+'</span>'+
+function sgrid(st) {
+  if (!st || !st.total) return '';
+  var fapV = st.fapValue ? '&#8377;' + Math.round(st.fapValue / 100000).toFixed(1) + 'L' : '-';
+  var riskV = st.cashAtRisk ? '&#8377;' + Math.round(st.cashAtRisk / 100000).toFixed(1) + 'L' : '&#8377;0';
+  var etaInfo = st.etaSheetLoaded ? st.etaSheetLoaded + ' SKUs' : 'not loaded';
+  function card(l, v, c, s, tab) {
+    return '<div class="sc" onclick="showTab(\'' + tab + '\')">' +
+      '<div class="l">' + l + '</div>' +
+      '<div class="v" style="color:' + c + '">' + v + '</div>' +
+      (s ? '<div class="s">' + s + '</div>' : '') +
       '</div>';
+  }
+  return '<div class="sgrid">' +
+    card('Total', st.total, 'var(--t1)', '', 'orders') +
+    card('Fulfillable', st.fulfillable, '#10b981', 'ready today', 'orders') +
+    card('FAP Pool', st.fap, '#3b82f6', fapV, 'fap') +
+    card('On ETA', st.eta, '#f59e0b', etaInfo, 'orders') +
+    card('Cash Risk', riskV, '#e02010', '<30% >7d', 'accounts') +
+    '</div>';
+}
+
+function renderReport(data) {
+  var h = sgrid(data.stats);
+  if (data.orders && data.orders.length) {
+    h += '<div class="slbl2">Orders by priority</div>';
+    var shown = data.orders.slice(0, 6);
+    shown.forEach(function(o) { h += oCard(o); });
+    if (data.orders.length > 6) {
+      h += '<div style="text-align:center;font-size:11px;color:var(--t3);padding:5px;cursor:pointer" onclick="showTab(\'orders\')">';
+      h += (data.orders.length - 6) + ' more — click Orders tab';
+      h += '</div>';
+    }
+  }
+  if (data.accountsAlerts && data.accountsAlerts.length) {
+    h += '<div class="slbl2">Accounts alerts</div>';
+    data.accountsAlerts.slice(0, 4).forEach(function(a) {
+      h += '<div style="padding:5px 9px;background:var(--s2);border:1px solid var(--b1);border-radius:5px;margin-bottom:4px;font-size:11px;display:flex;gap:7px;align-items:center">';
+      h += '<span style="font-family:JetBrains Mono,monospace;font-weight:600">' + a.ref + '</span>';
+      h += '<span style="color:var(--t2)">' + a.customer + '</span>';
+      h += '<span style="color:var(--amber);margin-left:auto">' + a.issue + '</span>';
+      h += '</div>';
     });
   }
   return h;
 }
 
-function renderOrders(){
-  if(!D.orders.length) return empty('📋','No data yet','Run order intelligence first');
-  var h=sgrid(D.stats)+'<div class="slbl2">All orders</div>';
-  D.orders.forEach(function(o){ h+=oCard(o); });
+function renderOrders() {
+  if (!D.orders.length) return empty('📋', 'No data yet', 'Run order intelligence first');
+  var h = sgrid(D.stats) + '<div class="slbl2">All orders</div>';
+  D.orders.forEach(function(o) { h += oCard(o); });
   return h;
 }
 
-function renderFAP(){
-  var fap=D.orders.filter(function(o){ return o.verdict==='fap'; });
-  if(!fap.length) return empty('🔄','No FAP candidates','Run order intelligence first');
-  var tv=fap.reduce(function(s,o){ return s+(o.balance||0); },0);
-  var h='<div style="font-size:12px;color:var(--t2);margin-bottom:10px">'+fap.length+' orders &middot; &#8377;'+Math.round(tv).toLocaleString('en-IN')+' recoverable</div>';
-  fap.forEach(function(o){ h+=oCard(o); });
+function renderFAP() {
+  var fap = D.orders.filter(function(o) { return o.verdict === 'fap'; });
+  if (!fap.length) return empty('🔄', 'No FAP candidates', 'Run order intelligence first');
+  var tv = fap.reduce(function(s, o) { return s + (o.balance || 0); }, 0);
+  var h = '<div style="font-size:12px;color:var(--t2);margin-bottom:10px">' + fap.length + ' orders &middot; &#8377;' + Math.round(tv).toLocaleString('en-IN') + ' recoverable</div>';
+  fap.forEach(function(o) { h += oCard(o); });
   return h;
 }
 
-function renderAccounts(){
-  if(!D.accounts.length) return empty('💳','No alerts','Run order intelligence first');
-  var h='<table class="at"><thead><tr><th>Order</th><th>Customer</th><th>Salesperson</th><th>Age</th><th>Advance</th><th>Issue</th><th>Action</th></tr></thead><tbody>';
-  D.accounts.forEach(function(a){
-    var ac=a.action==='dissolve'?'var(--red2)':a.action==='record'?'var(--green)':a.action==='review'?'var(--purple)':'var(--amber)';
-    var al=a.action==='dissolve'?'Dissolve':a.action==='record'?'Record payment':a.action==='review'?'Review':'Collect';
-    h+='<tr>'+
-      '<td style="font-family:\'JetBrains Mono\',monospace;font-size:10px">'+a.ref+'</td>'+
-      '<td style="color:var(--t2)">'+a.customer+'</td>'+
-      '<td style="color:var(--t3);font-size:11px">'+(a.salesperson||'')+'</td>'+
-      '<td style="color:'+(a.bookingAgeDays>30?'var(--red2)':a.bookingAgeDays>7?'var(--amber)':'var(--t3)')+'">'+a.bookingAgeDays+'d</td>'+
-      '<td style="color:'+(a.advancePct<10?'var(--red2)':a.advancePct<30?'var(--amber)':'var(--green)')+'">'+a.advancePct+'%</td>'+
-      '<td style="color:var(--t2);font-size:10px">'+a.issue+'</td>'+
-      '<td><span class="atag" style="background:'+ac+'22;color:'+ac+'">'+al+'</span></td>'+
-    '</tr>';
+function renderAccounts() {
+  if (!D.accounts.length) return empty('💳', 'No alerts', 'Run order intelligence first');
+  var h = '<table class="at"><thead><tr><th>Order</th><th>Customer</th><th>Salesperson</th><th>Age</th><th>Advance</th><th>Issue</th><th>Action</th></tr></thead><tbody>';
+  D.accounts.forEach(function(a) {
+    var ac = a.action === 'dissolve' ? '#e02010' : a.action === 'record' ? '#10b981' : a.action === 'review' ? '#8b5cf6' : '#f59e0b';
+    var al = a.action === 'dissolve' ? 'Dissolve' : a.action === 'record' ? 'Record payment' : a.action === 'review' ? 'Review' : 'Collect';
+    h += '<tr>';
+    h += '<td style="font-family:JetBrains Mono,monospace;font-size:10px">' + a.ref + '</td>';
+    h += '<td style="color:var(--t2)">' + a.customer + '</td>';
+    h += '<td style="color:var(--t3);font-size:11px">' + (a.salesperson || '') + '</td>';
+    h += '<td style="color:' + (a.bookingAgeDays > 30 ? '#e02010' : a.bookingAgeDays > 7 ? '#f59e0b' : 'var(--t3)') + '">' + a.bookingAgeDays + 'd</td>';
+    h += '<td style="color:' + (a.advancePct < 10 ? '#e02010' : a.advancePct < 30 ? '#f59e0b' : '#10b981') + '">' + a.advancePct + '%</td>';
+    h += '<td style="color:var(--t2);font-size:10px">' + a.issue + '</td>';
+    h += '<td><span class="atag" style="background:' + ac + '22;color:' + ac + '">' + al + '</span></td>';
+    h += '</tr>';
   });
-  return h+'</tbody></table>';
+  return h + '</tbody></table>';
 }
 
-function empty(icon,title,sub){
-  return '<div class="welcome"><div style="font-size:26px">'+icon+'</div><div style="font-weight:600">'+title+'</div><div style="font-size:12px;color:var(--t3)">'+sub+'</div></div>';
+function empty(icon, title, sub) {
+  return '<div class="welcome"><div style="font-size:26px">' + icon + '</div><div style="font-weight:600">' + title + '</div><div style="font-size:12px;color:var(--t3)">' + sub + '</div></div>';
 }
 </script>
 </body>
