@@ -371,7 +371,7 @@ function renderReport(data){
   if(data.orders&&data.orders.length){
     h+='<div class="slbl2">Orders &mdash; by priority</div>';
     data.orders.slice(0,6).forEach(function(o){ h+=oCard(o); });
-    if(data.orders.length>6) h+='<div style="text-align:center;font-size:11px;color:var(--t3);padding:5px;cursor:pointer" onclick="showTab(\"orders\")">'+(data.orders.length-6)+' more — click Orders tab</div>';
+    if(data.orders.length>6) h+='<div style="text-align:center;font-size:11px;color:var(--t3);padding:5px">'+(data.orders.length-6)+' more in Orders tab</div>';
   }
   if(data.accountsAlerts&&data.accountsAlerts.length){
     h+='<div class="slbl2">Accounts alerts</div>';
