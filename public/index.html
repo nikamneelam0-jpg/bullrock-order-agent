@@ -122,7 +122,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);height:
   </div>
   <div class="content">
     <div class="out" id="out">
-      <div id="setupBar" class="setup-bar" style="display:none">
+      <div id="setupBar" class="setup-bar" style="display:none" hidden>
         ⚠ Enter your Zoho access token to connect live data
         <input class="setup-input" id="zohoToken" type="password" placeholder="Zoho OAuth token...">
         <button class="setup-btn" onclick="saveToken()">Save & Connect</button>
@@ -150,11 +150,7 @@ let D={orders:[],accounts:[],stats:{}};
 let busy=false;
 let curTab='agent';
 
-window.onload=()=>{
-  if(!localStorage.getItem('br_ztok')){
-    document.getElementById('setupBar').style.display='flex';
-  }
-};
+window.onload=()=>{};
 
 function resetToken(){
   localStorage.removeItem('br_ztok');
@@ -191,11 +187,6 @@ function run(cmd){
   const inp=document.getElementById('inp');
   const msg=cmd||inp.value.trim();
   if(!msg||busy)return;
-  const ZTOK=localStorage.getItem('br_ztok')||'';
-  if(!ZTOK){
-    document.getElementById('setupBar').style.display='flex';
-    return;
-  }
   inp.value='';
   showTab('agent');
   document.getElementById('welcome').style.display='none';
@@ -209,7 +200,7 @@ function run(cmd){
   fetch('/api/agent',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({message:msg,zohoToken:ZTOK})
+    body:JSON.stringify({message:msg})
   })
   .then(r=>r.json())
   .then(resp=>{
