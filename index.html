@@ -236,7 +236,26 @@ function scroll(){const o=document.getElementById('out');o.scrollTop=o.scrollHei
 function setBadge(id,n){const b=document.getElementById('b-'+id);b.textContent=n;b.style.display=n>0?'inline-flex':'none';}
 
 function sc(l,v,c,s){return`<div class="sc"><div class="l">${l}</div><div class="v" style="color:${c}">${v}</div>${s?`<div class="s">${s}</div>`:''}</div>`;}
-function sgrid(st){if(!st?.total)return'';return`<div class="sgrid">${sc('Total',st.total||0,'var(--t1)','')}${sc('Fulfillable',st.fulfillable||0,'var(--green)','ready today')}${sc('FAP',st.fap||0,'var(--blue)',st.fapValue?'₹'+Math.round(st.fapValue/100000).toFixed(1)+'L':'—')}${sc('On ETA',st.eta||0,'var(--amber)','')}${sc('Cash risk',st.cashAtRisk?'₹'+Math.round(st.cashAtRisk/100000).toFixed(1)+'L':'₹0','var(--red2)','<30% >7d')}</div>`;}
+function sgrid(st){
+  if(!st||!st.total)return'';
+  var fapV=st.fapValue?'&#8377;'+Math.round(st.fapValue/100000).toFixed(1)+'L':'—';
+  var riskV=st.cashAtRisk?'&#8377;'+Math.round(st.cashAtRisk/100000).toFixed(1)+'L':'&#8377;0';
+  var etaInfo=st.etaSheetLoaded?st.etaSheetLoaded+' SKUs':'—';
+  function scc(l,v,col,s,tab){
+    return '<div class="sc" style="cursor:pointer" onclick="showTab(''+tab+'')">'
+      +'<div class="l">'+l+'</div>'
+      +'<div class="v" style="color:'+col+'">'+v+'</div>'
+      +(s?'<div class="s">'+s+'</div>':'')
+      +'</div>';
+  }
+  return '<div class="sgrid">'
+    +scc('Total',st.total||0,'var(--t1)','','orders')
+    +scc('Fulfillable',st.fulfillable||0,'var(--green)','ready today','orders')
+    +scc('FAP Pool',st.fap||0,'var(--blue)',fapV,'fap')
+    +scc('On ETA',st.eta||0,'var(--amber)',etaInfo,'orders')
+    +scc('Cash Risk',riskV,'var(--red2)','<30% >7d','accounts')
+    +'</div>';
+}
 
 function oCard(o){
   const vc={fulfillable:'var(--green)',fap:'var(--blue)',eta:'var(--amber)',blocked:'var(--t3)',urgent:'var(--red2)'}[o.verdict]||'var(--t3)';
