@@ -59,12 +59,16 @@ export default async function handler(req, res) {
 
     // Step 3: Build ETA map
     const etaMap = {};
+    let etaDebug = 'not fetched';
     try {
-      const sheetData = await sheetRes.json();
-      const rows = sheetData?.records?.rows || [];
+      const sheetText = await sheetRes.text();
+      etaDebug = 'raw: ' + sheetText.substring(0, 200);
+      const sheetData = JSON.parse(sheetText);
+      const rows = sheetData?.records?.rows || sheetData?.rows || [];
+      etaDebug = 'rows: ' + rows.length + ' keys: ' + Object.keys(sheetData).join(',');
       rows.forEach(row => {
-        const rawSku = String(row.SKU || row.sku || '').trim();
-        const rawEta = String(row.ETA || row.eta || '').trim();
+        const rawSku = String(row.SKU || row.sku || row[0] || '').trim();
+        const rawEta = String(row.ETA || row.eta || row[3] || '').trim();
         if (rawSku && rawEta) {
           etaMap[rawSku] = rawEta;
           etaMap[rawSku.replace(/^0+/, '')] = rawEta;
@@ -72,7 +76,8 @@ export default async function handler(req, res) {
           etaMap[rawSku.padStart(5, '0')] = rawEta;
         }
       });
-    } catch(e) {}
+      etaDebug = 'loaded: ' + Object.keys(etaMap).length + ' entries';
+    } catch(e) { etaDebug = 'error: ' + e.message; }
 
     // Step 4: Filter orders
     const confirmedSOs = (soData.salesorders || []).filter(so =>
@@ -273,7 +278,7 @@ export default async function handler(req, res) {
         blocked: orders.filter(o => o.verdict === 'blocked').length,
         cashAtRisk: orders.filter(o => o.effectiveAdvPct < 30 && o.bookingAgeDays > 7).reduce((s,o) => s+o.balance, 0),
         fapValue: fapOrders.reduce((s,o) => s+o.balance, 0),
-        etaSheetLoaded: Object.keys(etaMap).length
+        etaSheetLoaded: Object.keys(etaMap).length, etaDebug
       },
       orders,
       accountsAlerts: orders.filter(o => o.accountsAlert).map(o => ({
