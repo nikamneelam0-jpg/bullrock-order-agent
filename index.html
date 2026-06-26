@@ -237,24 +237,25 @@ function setBadge(id,n){const b=document.getElementById('b-'+id);b.textContent=n
 
 function sc(l,v,c,s){return`<div class="sc"><div class="l">${l}</div><div class="v" style="color:${c}">${v}</div>${s?`<div class="s">${s}</div>`:''}</div>`;}
 function sgrid(st){
-  if(!st||!st.total)return'';
-  var fapV=st.fapValue?'&#8377;'+Math.round(st.fapValue/100000).toFixed(1)+'L':'—';
-  var riskV=st.cashAtRisk?'&#8377;'+Math.round(st.cashAtRisk/100000).toFixed(1)+'L':'&#8377;0';
-  var etaInfo=st.etaSheetLoaded?st.etaSheetLoaded+' SKUs':'—';
-  function scc(l,v,col,s,tab){
-    return '<div class="sc" style="cursor:pointer" onclick="showTab(''+tab+'')">'
-      +'<div class="l">'+l+'</div>'
-      +'<div class="v" style="color:'+col+'">'+v+'</div>'
-      +(s?'<div class="s">'+s+'</div>':'')
-      +'</div>';
+  if(!st||!st.total) return '';
+  var fapV = st.fapValue ? String.fromCharCode(8377)+Math.round(st.fapValue/100000).toFixed(1)+'L' : '-';
+  var riskV = st.cashAtRisk ? String.fromCharCode(8377)+Math.round(st.cashAtRisk/100000).toFixed(1)+'L' : String.fromCharCode(8377)+'0';
+  var etaS = st.etaSheetLoaded ? st.etaSheetLoaded+' SKUs' : '-';
+  var h = '<div class="sgrid">';
+  var tabs = ['orders','orders','fap','orders','accounts'];
+  var lbls = ['Total','Fulfillable','FAP Pool','On ETA','Cash Risk'];
+  var vals = [st.total||0, st.fulfillable||0, st.fap||0, st.eta||0, riskV];
+  var cols = ['var(--t1)','var(--green)','var(--blue)','var(--amber)','var(--red2)'];
+  var subs = ['','ready today',fapV,etaS,'<30% >7d'];
+  for(var i=0;i<5;i++){
+    h += '<div class="sc" style="cursor:pointer" data-tab="'+tabs[i]+'">';
+    h += '<div class="l">'+lbls[i]+'</div>';
+    h += '<div class="v" style="color:'+cols[i]+'">'+vals[i]+'</div>';
+    if(subs[i]) h += '<div class="s">'+subs[i]+'</div>';
+    h += '</div>';
   }
-  return '<div class="sgrid">'
-    +scc('Total',st.total||0,'var(--t1)','','orders')
-    +scc('Fulfillable',st.fulfillable||0,'var(--green)','ready today','orders')
-    +scc('FAP Pool',st.fap||0,'var(--blue)',fapV,'fap')
-    +scc('On ETA',st.eta||0,'var(--amber)',etaInfo,'orders')
-    +scc('Cash Risk',riskV,'var(--red2)','<30% >7d','accounts')
-    +'</div>';
+  h += '</div>';
+  return h;
 }
 
 function oCard(o){
