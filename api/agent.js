@@ -1,15 +1,11 @@
-export const config = { runtime: 'edge' };
+export const config = { maxDuration: 60 };
 
-export default async function handler(req) {
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Content-Type': 'application/json'
-  };
-
-  if (req.method === 'OPTIONS') return new Response(null, { status: 200, headers });
-  if (req.method !== 'POST') return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers });
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const CLIENT_ID = process.env.ZOHO_CLIENT_ID;
   const CLIENT_SECRET = process.env.ZOHO_CLIENT_SECRET;
@@ -47,7 +43,7 @@ export default async function handler(req) {
     });
     const tokenData = await tokenRes.json();
     if (!tokenData.access_token) {
-      return new Response(JSON.stringify({ error: 'Token refresh failed: ' + JSON.stringify(tokenData) }), { status: 401, headers });
+      return res.status(401).json({ error: 'Token refresh failed: ' + JSON.stringify(tokenData) });
     }
     const AT = tokenData.access_token;
     const zH = { 'Authorization': 'Zoho-oauthtoken ' + AT };
@@ -288,8 +284,8 @@ export default async function handler(req) {
       }))
     };
 
-    return new Response(JSON.stringify({ success: true, data: result }), { status: 200, headers });
+    return res.status(200).json({ success: true, data: result });
   } catch(e) {
-    return new Response(JSON.stringify({ error: e.message }), { status: 500, headers });
+    return res.status(500).json({ error: e.message });
   }
 }
