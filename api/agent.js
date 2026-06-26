@@ -207,15 +207,17 @@ export default async function handler(req, res) {
 
     // SOs with full line items
     soDetails.forEach((detail, i) => {
-      const so = detail || confirmedSOs[i];
-      if (!so) return;
+      const base = confirmedSOs[i];
+      if (!base) return;
+      const so = detail || base;
       const cf = so.custom_field_hash || {};
+      const lineItems = detail ? (detail.line_items || []) : [];
       orders.push(classify(
         so.salesorder_number, so.customer_name, so.salesperson_name,
         so.shipment_date, cf.cf_confirmed_date_unformatted || so.date,
         parseFloat(so.total)||0, parseFloat(so.balance)||0,
         cf.cf_payment_note || '',
-        so.current_sub_status, so.salesorder_id, 'so', so.line_items || []
+        so.current_sub_status, so.salesorder_id, 'so', lineItems
       ));
     });
     // Remaining SOs without details
@@ -227,17 +229,20 @@ export default async function handler(req, res) {
     });
 
     // BFLD with full line items
-    // KEY FIX: Use cf_expected_shipment_date_unformatted for ESD, not due_date
     invDetails.forEach((detail, i) => {
-      const inv = detail || bfld[i];
-      if (!inv) return;
+      const base = bfld[i];
+      if (!base) return;
+      // Use detail (with line_items) if available, else fall back to list view
+      const inv = detail || base;
       const cf = inv.custom_field_hash || {};
-      const esd = cf.cf_expected_shipment_date_unformatted || inv.due_date || '';
+      // KEY: use cf_expected_shipment_date_unformatted for actual ESD
+      const esd = cf.cf_expected_shipment_date_unformatted || cf.cf_expected_shipment_date || inv.due_date || '';
+      const lineItems = detail ? (detail.line_items || []) : [];
       orders.push(classify(
         inv.invoice_number, inv.customer_name, inv.salesperson_name,
         esd, inv.date,
         parseFloat(inv.total)||0, parseFloat(inv.balance)||0,
-        '', inv.status, inv.invoice_id, 'inv', inv.line_items || []
+        '', inv.status, inv.invoice_id, 'inv', lineItems
       ));
     });
     // Remaining BFLD without details
