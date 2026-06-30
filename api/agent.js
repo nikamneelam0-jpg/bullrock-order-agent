@@ -62,13 +62,13 @@ export default async function handler(req, res) {
     let etaDebug = 'not fetched';
     try {
       const sheetText = await sheetRes.text();
-      etaDebug = 'raw: ' + sheetText.substring(0, 200);
       const sheetData = JSON.parse(sheetText);
-      const rows = sheetData?.records?.rows || sheetData?.rows || [];
-      etaDebug = 'rows: ' + rows.length + ' keys: ' + Object.keys(sheetData).join(',');
-      rows.forEach(row => {
-        const rawSku = String(row.SKU || row.sku || row[0] || '').trim();
-        const rawEta = String(row.ETA || row.eta || row[3] || '').trim();
+      // Correct format: { method, records: [...], status } — records is a flat array
+      const records = sheetData?.records || [];
+      etaDebug = 'status:' + sheetData.status + ' records:' + records.length + ' sample:' + JSON.stringify(records[0]||{}).substring(0,150);
+      records.forEach(row => {
+        const rawSku = String(row.SKU || row.sku || '').trim();
+        const rawEta = String(row.ETA || row.eta || '').trim();
         if (rawSku && rawEta) {
           etaMap[rawSku] = rawEta;
           etaMap[rawSku.replace(/^0+/, '')] = rawEta;
@@ -76,7 +76,7 @@ export default async function handler(req, res) {
           etaMap[rawSku.padStart(5, '0')] = rawEta;
         }
       });
-      etaDebug = 'loaded: ' + Object.keys(etaMap).length + ' entries';
+      etaDebug = 'loaded: ' + Object.keys(etaMap).length + ' entries from ' + records.length + ' rows';
     } catch(e) { etaDebug = 'error: ' + e.message; }
 
     // Step 4: Filter orders
